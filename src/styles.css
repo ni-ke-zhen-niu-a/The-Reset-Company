@@ -51,7 +51,7 @@ main { padding: 0 40px; }
 .event-time > p { margin: 12px 0 20px; color: #2f2f2d; font-size: 16px; }
 .status-line { display: inline-flex; align-items: center; gap: 10px; color: #444440; font-size: 16px; }
 .status-line span { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); }
-.confidence-joke { margin: 12px 0 0 !important; color: #8b8b86 !important; font-family: "DM Mono", ui-monospace, monospace; font-size: 11px !important; letter-spacing: .01em; }
+.confidence-joke { margin: 5px 0 0; color: #8b8b86; font-family: "DM Mono", ui-monospace, monospace; font-size: 11px; letter-spacing: .01em; }
 .state-message { min-height: 220px; display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; }
 .state-message h1 { margin: 12px 0; font-family: "DM Mono", monospace; font-size: clamp(38px, 6vw, 76px); letter-spacing: -.055em; }
 .state-message p { max-width: 580px; margin: 0; color: var(--muted); font-size: 17px; line-height: 1.6; }
@@ -77,7 +77,8 @@ blockquote cite { display: block; margin-top: 10px; font-style: normal; }
 .how-section { position: relative; display: flex; align-items: center; justify-content: space-between; min-height: 68px; border-top: 1px solid var(--line); }
 .how-section > button { display: flex; align-items: center; gap: 12px; padding: 14px 0; border: 0; background: none; cursor: pointer; }
 .how-section.open > button .icon:last-child { transform: rotate(180deg); }
-.local-note { color: var(--muted); font-size: 13px; }
+.footer-meta { text-align: right; }
+.local-note { margin: 0; color: var(--muted); font-size: 13px; }
 .how-detail { position: absolute; left: 0; right: 0; bottom: 58px; padding: 23px 25px; background: white; border: 1px solid var(--line); box-shadow: 0 12px 30px rgba(0,0,0,.08); z-index: 3; }
 .how-detail p { max-width: 760px; margin: 8px 0 0; color: var(--muted); line-height: 1.55; font-size: 14px; }
 
@@ -123,7 +124,7 @@ blockquote cite { display: block; margin-top: 10px; font-style: normal; }
   .world-time strong { font-size: 16px; }
   .world-time small { font-size: 9px; }
   .how-section { flex-wrap: wrap; padding: 4px 0 12px; }
-  .local-note { width: 100%; margin: 0; }
+  .footer-meta { width: 100%; text-align: left; }
   .how-detail { bottom: 78px; }
 }
 

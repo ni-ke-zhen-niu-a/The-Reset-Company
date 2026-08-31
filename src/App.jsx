@@ -132,14 +132,16 @@ function App() {
           <div className="event-primary"><Icon name="clock" size={29}/><h1>{eventLabel(target, locale, timeZone)}</h1></div>
           <p>{timeZone} ({zoneOffset(target, timeZone)})</p>
           <div className="status-line"><span/>{data.state === 'completed' ? t.live : t.scheduled} · {t.detectedFrom}</div>
-          <p className="confidence-joke">{t.confidenceJoke}</p>
         </div>}
       </section>
       <Source data={data} locale={locale} t={t}/>
       <WorldTimes target={target} locale={locale} t={t}/>
       <section className={`how-section ${howOpen ? 'open' : ''}`}>
         <button onClick={() => setHowOpen(!howOpen)} aria-expanded={howOpen}><Icon name="info"/><span>{t.how}</span><Icon name="chevron" size={15}/></button>
-        <p className="local-note">{t.localNote}</p>
+        <div className="footer-meta">
+          <p className="local-note">{t.localNote}</p>
+          <p className="confidence-joke">{t.confidenceJoke}</p>
+        </div>
         {howOpen && <div className="how-detail"><strong>{t.updateTitle}</strong><p>{t.updateBody}</p></div>}
       </section>
     </main>

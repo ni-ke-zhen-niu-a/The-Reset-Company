@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <style>
+    .clock { stroke: #111210; }
+    @media (prefers-color-scheme: dark) { .clock { stroke: #f2f3f0; } }
+  </style>
+  <circle class="clock" cx="30" cy="30" r="22" fill="none" stroke-width="4"/>
+  <path class="clock" d="M30 17v14l9 5" fill="none" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M40 52 55 37m-8 0h8v8" fill="none" stroke="#f04418" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

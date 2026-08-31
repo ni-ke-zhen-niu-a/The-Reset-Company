@@ -80,7 +80,7 @@ function FrescoStage({ approach, pressed, t }) {
 
   return <div
     className={`fresco-stage ${pressed ? 'is-pressed' : ''} ${feedback ? `feedback-${feedback}` : ''}`}
-    style={{ '--travel-x': `${approach * 145}px`, '--travel-y': `${approach * 3}px` }}
+    style={{ '--travel-x': `${approach * 190}px`, '--travel-y': `${approach * 3}px` }}
   >
     <img className="tibo-figure" src="./assets/tibo-fresco-reclining.webp" alt={t.tiboAlt}/>
     <button className="reset-assembly" type="button" onClick={handleButton} aria-label={pressed ? t.resetPressed : t.resetNotYet}>

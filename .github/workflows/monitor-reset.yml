@@ -1,0 +1,55 @@
+name: Monitor Tibo reset posts
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+    inputs:
+      post_text:
+        description: 'Tibo post text (manual fallback)'
+        required: false
+        type: string
+      source_url:
+        description: 'Source post URL'
+        required: false
+        type: string
+      announced_at:
+        description: 'Post time in ISO 8601 (optional)'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: monitor-reset
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Check posts
+        run: npm run check-reset
+        env:
+          X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
+          PUBLIC_TIMELINE_RSS_URL: ${{ secrets.PUBLIC_TIMELINE_RSS_URL }}
+          MANUAL_POST_TEXT: ${{ inputs.post_text }}
+          MANUAL_SOURCE_URL: ${{ inputs.source_url }}
+          MANUAL_ANNOUNCED_AT: ${{ inputs.announced_at }}
+      - name: Commit data changes
+        run: |
+          if git diff --quiet -- public/data; then
+            exit 0
+          fi
+          git config user.name "codex-reset-bot"
+          git config user.email "codex-reset-bot@users.noreply.github.com"
+          git add public/data
+          git commit -m "data: refresh reset schedule"
+          git push

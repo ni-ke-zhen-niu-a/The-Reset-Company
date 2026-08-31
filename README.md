@@ -8,7 +8,7 @@ A small public utility that turns reset plans announced by [Tibo](https://x.com/
 - Supports English, Simplified Chinese, Japanese, Spanish, German, French, and Portuguese.
 - Shows the source post, detection time, last check, and five reference cities.
 - Distinguishes exact times, relative times, and vague announcements. Vague posts show “time TBD” instead of a fabricated countdown.
-- Runs a GitHub Actions monitor every 10 minutes and redeploys only when data changes.
+- Runs a GitHub Actions monitor every 10 minutes and redeploys only when the reset schedule changes.
 
 ## Run locally
 

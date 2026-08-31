@@ -102,20 +102,31 @@ async function main() {
   const history = JSON.parse(await readFile(HISTORY_PATH, 'utf8'))
   const { posts, method } = await gatherPosts()
   const found = chooseAnnouncement(posts)
-  let next = { ...current, lastCheckedAt: checkedAt.toISOString(), lastCheckMethod: method, lastCheckStatus: method === 'unavailable' ? 'degraded' : 'success' }
+  let next = current
+  let changed = false
 
-  if (found && (!current.announcedAt || new Date(found.announcedAt) >= new Date(current.announcedAt))) {
+  const isNewAnnouncement = found && (
+    found.sourceId !== current.sourceId ||
+    found.resetAt !== current.resetAt ||
+    found.state !== current.state
+  ) && (!current.announcedAt || new Date(found.announcedAt) >= new Date(current.announcedAt))
+
+  if (isNewAnnouncement) {
     next = { schemaVersion: 1, ...found, lastCheckedAt: checkedAt.toISOString(), lastCheckMethod: method, lastCheckStatus: 'success' }
+    changed = true
     if (found.resetAt && !history.some((item) => item.sourceId === found.sourceId)) {
       history.unshift({ resetAt: found.resetAt, announcedAt: found.announcedAt, sourceUrl: found.sourceUrl, sourceId: found.sourceId })
     }
-  } else if (current.resetAt && checkedAt - new Date(current.resetAt) > 12 * 3600000) {
-    next = { ...next, state: 'none', resetAt: null }
+  } else if (current.state !== 'none' && current.resetAt && checkedAt - new Date(current.resetAt) > 12 * 3600000) {
+    next = { ...current, state: 'none', resetAt: null, lastCheckedAt: checkedAt.toISOString(), lastCheckMethod: method, lastCheckStatus: method === 'unavailable' ? 'degraded' : 'success' }
+    changed = true
   }
 
-  await writeFile(DATA_PATH, `${JSON.stringify(next, null, 2)}\n`)
-  await writeFile(HISTORY_PATH, `${JSON.stringify(history.slice(0, 50), null, 2)}\n`)
-  console.log(JSON.stringify({ checkedAt: checkedAt.toISOString(), method, candidates: posts.length, selected: found?.sourceId || null, state: next.state }))
+  if (changed) {
+    await writeFile(DATA_PATH, `${JSON.stringify(next, null, 2)}\n`)
+    await writeFile(HISTORY_PATH, `${JSON.stringify(history.slice(0, 50), null, 2)}\n`)
+  }
+  console.log(JSON.stringify({ checkedAt: checkedAt.toISOString(), method, candidates: posts.length, selected: found?.sourceId || null, state: next.state, changed }))
 }
 
 main().catch((error) => {

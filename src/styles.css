@@ -51,6 +51,7 @@ main { padding: 0 40px; }
 .event-time > p { margin: 12px 0 20px; color: #2f2f2d; font-size: 16px; }
 .status-line { display: inline-flex; align-items: center; gap: 10px; color: #444440; font-size: 16px; }
 .status-line span { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); }
+.confidence-joke { margin: 12px 0 0 !important; color: #8b8b86 !important; font-family: "DM Mono", ui-monospace, monospace; font-size: 11px !important; letter-spacing: .01em; }
 .state-message { min-height: 220px; display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; }
 .state-message h1 { margin: 12px 0; font-family: "DM Mono", monospace; font-size: clamp(38px, 6vw, 76px); letter-spacing: -.055em; }
 .state-message p { max-width: 580px; margin: 0; color: var(--muted); font-size: 17px; line-height: 1.6; }

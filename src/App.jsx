@@ -132,6 +132,7 @@ function App() {
           <div className="event-primary"><Icon name="clock" size={29}/><h1>{eventLabel(target, locale, timeZone)}</h1></div>
           <p>{timeZone} ({zoneOffset(target, timeZone)})</p>
           <div className="status-line"><span/>{data.state === 'completed' ? t.live : t.scheduled} · {t.detectedFrom}</div>
+          <p className="confidence-joke">{t.confidenceJoke}</p>
         </div>}
       </section>
       <Source data={data} locale={locale} t={t}/>

@@ -20,6 +20,7 @@ const copy = {
     announced: 'RESET ANNOUNCED · TIME TBD', announcedBody: 'A reset was mentioned, but no precise time was provided.',
     auto: 'Automatic', timezone: 'Time zone', language: 'Language', updateTitle: 'Automatic, with an honest fallback',
     updateBody: 'A scheduled job checks public posts. Exact and relative times are parsed; vague announcements remain “time TBD”. X API access is preferred, with public discovery and manual correction as fallbacks.',
+    disclaimer: 'Unofficial fan project. Not affiliated with or endorsed by Tibo, OpenAI, Codex, or ChatGPT.',
     close: 'Close', openMenu: 'Open menu', day: 'day', hour: 'hour', minute: 'minute', second: 'second', ago: 'ago', justNow: 'just now',
   },
   'zh-CN': {
@@ -33,6 +34,7 @@ const copy = {
     announced: '已宣布重置 · 时间待定', announcedBody: '帖子提到了重置，但没有给出精确时间。',
     auto: '自动', timezone: '时区', language: '语言', updateTitle: '自动更新，同时诚实处理不确定性',
     updateBody: '定时任务会检查公开帖子。精确时间和相对时间会被解析；模糊公告保持“时间待定”。优先使用 X API，公开检索与人工校正作为备用。',
+    disclaimer: '非官方粉丝项目，与 Tibo、OpenAI、Codex 或 ChatGPT 无隶属或背书关系。',
     close: '关闭', openMenu: '打开菜单', day: '天', hour: '小时', minute: '分钟', second: '秒', ago: '前', justNow: '刚刚',
   },
   ja: {
@@ -46,6 +48,7 @@ const copy = {
     announced: 'リセット発表済み・時刻未定', announcedBody: 'リセットへの言及はありますが、正確な時刻はありません。',
     auto: '自動', timezone: 'タイムゾーン', language: '言語', updateTitle: '自動更新と正直なフォールバック',
     updateBody: '定期ジョブが公開投稿を確認します。曖昧な発表は時刻未定のまま表示します。',
+    disclaimer: '非公式のファンプロジェクトです。Tibo、OpenAI、Codex、ChatGPT とは提携しておらず、承認も受けていません。',
     close: '閉じる', openMenu: 'メニュー', day: '日', hour: '時間', minute: '分', second: '秒', ago: '前', justNow: 'たった今',
   },
   es: {
@@ -59,6 +62,7 @@ const copy = {
     announced: 'REINICIO ANUNCIADO · HORA PENDIENTE', announcedBody: 'Se anunció un reinicio, pero sin una hora precisa.',
     auto: 'Automático', timezone: 'Zona horaria', language: 'Idioma', updateTitle: 'Automático, con una alternativa transparente',
     updateBody: 'Una tarea programada revisa las publicaciones públicas. Los anuncios imprecisos permanecen como “hora pendiente”.',
+    disclaimer: 'Proyecto de fans no oficial, sin afiliación ni respaldo de Tibo, OpenAI, Codex o ChatGPT.',
     close: 'Cerrar', openMenu: 'Abrir menú', day: 'día', hour: 'hora', minute: 'minuto', second: 'segundo', ago: 'hace', justNow: 'ahora mismo',
   },
   de: {
@@ -72,6 +76,7 @@ const copy = {
     announced: 'RESET ANGEKÜNDIGT · ZEIT OFFEN', announcedBody: 'Ein Reset wurde erwähnt, aber ohne genaue Zeit.',
     auto: 'Automatisch', timezone: 'Zeitzone', language: 'Sprache', updateTitle: 'Automatisch, mit ehrlichem Fallback',
     updateBody: 'Ein geplanter Job prüft öffentliche Beiträge. Vage Ankündigungen bleiben als „Zeit offen“ markiert.',
+    disclaimer: 'Inoffizielles Fanprojekt, ohne Verbindung oder Unterstützung durch Tibo, OpenAI, Codex oder ChatGPT.',
     close: 'Schließen', openMenu: 'Menü öffnen', day: 'Tag', hour: 'Stunde', minute: 'Minute', second: 'Sekunde', ago: 'vor', justNow: 'gerade eben',
   },
   fr: {
@@ -85,6 +90,7 @@ const copy = {
     announced: 'RÉINITIALISATION ANNONCÉE · HEURE À VENIR', announcedBody: "L’annonce ne donne pas d’heure précise.",
     auto: 'Automatique', timezone: 'Fuseau horaire', language: 'Langue', updateTitle: 'Automatique, avec un repli transparent',
     updateBody: 'Une tâche planifiée vérifie les publications publiques. Les annonces vagues restent marquées « heure à venir ».',
+    disclaimer: 'Projet de fans non officiel, sans affiliation ni approbation de Tibo, OpenAI, Codex ou ChatGPT.',
     close: 'Fermer', openMenu: 'Ouvrir le menu', day: 'jour', hour: 'heure', minute: 'minute', second: 'seconde', ago: 'il y a', justNow: "à l’instant",
   },
   pt: {
@@ -98,6 +104,7 @@ const copy = {
     announced: 'REDEFINIÇÃO ANUNCIADA · HORÁRIO PENDENTE', announcedBody: 'A publicação não informou um horário preciso.',
     auto: 'Automático', timezone: 'Fuso horário', language: 'Idioma', updateTitle: 'Automático, com alternativa transparente',
     updateBody: 'Uma tarefa agendada verifica publicações públicas. Anúncios vagos continuam como “horário pendente”.',
+    disclaimer: 'Projeto de fã não oficial, sem afiliação ou endosso de Tibo, OpenAI, Codex ou ChatGPT.',
     close: 'Fechar', openMenu: 'Abrir menu', day: 'dia', hour: 'hora', minute: 'minuto', second: 'segundo', ago: 'atrás', justNow: 'agora mesmo',
   },
 }

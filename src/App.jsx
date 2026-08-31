@@ -50,19 +50,8 @@ function Header({ locale, setLocale, timeZone, setTimeZone, t }) {
   </header>
 }
 
-function Countdown({ target, state, locale, timeZone, t }) {
-  const [now, setNow] = useState(new Date())
-  useEffect(() => {
-    const timer = window.setInterval(() => setNow(new Date()), 1000)
-    return () => window.clearInterval(timer)
-  }, [])
-  const parts = target ? countdownParts(target, now) : null
-  const expired = state === 'completed' || parts?.expired
-
-  if (state === 'announced' && !target) return <div className="state-message"><h1>{t.announced}</h1><p>{t.announcedBody}</p></div>
-  if (!target) return <div className="state-message"><h1>{t.awaiting}</h1><p>{t.awaitingBody}</p></div>
-  if (expired) return <div className="state-message live"><span className="live-mark"><Icon name="refresh" size={30}/></span><h1>{t.live}</h1><p>{t.liveBody}</p></div>
-
+function Countdown({ target, now, t }) {
+  const parts = countdownParts(target, now)
   const units = parts.days > 0
     ? [['days', t.days], ['hours', t.hours], ['minutes', t.minutes], ['seconds', t.seconds]]
     : [['hours', t.hours], ['minutes', t.minutes], ['seconds', t.seconds]]
@@ -72,6 +61,20 @@ function Countdown({ target, state, locale, timeZone, t }) {
       <div className="count-unit"><strong>{String(parts[key]).padStart(2, '0')}</strong><span>{label}</span></div>
     </div>)}
     <div className="meridians" aria-hidden="true"><span>−12</span><span>−8</span><span>−4</span><span>0</span><span>+4</span><span>+8</span><span>+12</span></div>
+  </div>
+}
+
+function FrescoStage({ approach, pressed }) {
+  return <div
+    className={`fresco-stage ${pressed ? 'is-pressed' : ''}`}
+    style={{ '--approach': approach }}
+    aria-hidden="true"
+  >
+    <img className="tibo-figure" src="./assets/tibo-fresco-reclining.webp" alt=""/>
+    <div className="reset-assembly">
+      <img className="reset-button" src="./assets/fresco-reset-button.webp" alt=""/>
+      <span className="contact-spark"/>
+    </div>
   </div>
 }
 
@@ -100,7 +103,6 @@ function Source({ data, locale, t }) {
         {data.sourceUrl && <a href={data.sourceUrl} target="_blank" rel="noreferrer"><Icon name="link"/>{t.viewSource}<Icon name="external" size={15}/></a>}
         <p><Icon name="calendar"/>{t.detected}: {detected ? new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' }).format(detected) : '—'}</p>
         <p><Icon name="refresh"/>{t.lastChecked}: <span className="relative-check">{relativeTime(checked, locale, t)}</span></p>
-        <p className="confidence-joke"><Icon name="info"/>{t.confidenceJoke}</p>
       </div>
     </div>
   </section>
@@ -111,7 +113,13 @@ function App() {
   const [timeZone, setTimeZoneState] = useState(() => localStorage.getItem('codex-reset-timezone') || getLocalZone())
   const [data, setData] = useState({ state: 'none' })
   const [howOpen, setHowOpen] = useState(false)
+  const [now, setNow] = useState(new Date())
   const t = getCopy(locale)
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(new Date()), 1000)
+    return () => window.clearInterval(timer)
+  }, [])
 
   useEffect(() => {
     fetch(`${DATA_URL}?v=${Date.now()}`, { cache: 'no-store' })
@@ -123,17 +131,37 @@ function App() {
   const setLocale = (value) => { setLocaleState(value); localStorage.setItem('codex-reset-language', value); document.documentElement.lang = value }
   const setTimeZone = (value) => { setTimeZoneState(value); localStorage.setItem('codex-reset-timezone', value) }
   const target = useMemo(() => data.resetAt ? new Date(data.resetAt) : null, [data.resetAt])
+  const announcedAt = useMemo(() => data.announcedAt ? new Date(data.announcedAt) : null, [data.announcedAt])
+  const expired = Boolean(target && (data.state === 'completed' || target.getTime() <= now.getTime()))
+  const approach = useMemo(() => {
+    if (!target) return 0
+    const end = target.getTime()
+    const start = announcedAt?.getTime() ?? end - 6 * 60 * 60 * 1000
+    if (end <= start) return expired ? 1 : 0
+    return Math.min(1, Math.max(0, (now.getTime() - start) / (end - start)))
+  }, [announcedAt, expired, now, target])
 
   return <div className="page-shell">
     <Header locale={locale} setLocale={setLocale} timeZone={timeZone} setTimeZone={setTimeZone} t={t}/>
     <main>
-      <section className="hero">
-        <Countdown target={target} state={data.state} locale={locale} timeZone={timeZone} t={t}/>
-        {target && <div className="event-time">
-          <div className="event-primary"><Icon name="clock" size={29}/><h1>{eventLabel(target, locale, timeZone)}</h1></div>
-          <p>{timeZone} ({zoneOffset(target, timeZone)})</p>
-          <div className="status-line"><span/>{data.state === 'completed' ? t.live : t.scheduled} · {t.detectedFrom}</div>
-        </div>}
+      <section className={`hero ${expired ? 'hero-live' : ''}`}>
+        <div className="hero-copy">
+          {data.state === 'announced' && !target
+            ? <div className="state-message"><h1>{t.announced}</h1><p>{t.announcedBody}</p></div>
+            : !target
+              ? <div className="state-message"><h1>{t.awaiting}</h1><p>{t.awaitingBody}</p></div>
+              : expired
+                ? <div className="state-message live"><span className="live-mark"><Icon name="refresh" size={30}/></span><h1>{t.live}</h1><p>{t.liveBody}</p></div>
+                : <Countdown target={target} now={now} t={t}/>
+          }
+          {target && <div className="event-time">
+            <div className="event-primary"><Icon name="clock" size={29}/><h1>{eventLabel(target, locale, timeZone)}</h1></div>
+            <p>{timeZone} ({zoneOffset(target, timeZone)})</p>
+            <div className="status-line"><span/>{expired ? t.live : t.scheduled} · {t.detectedFrom}</div>
+          </div>}
+          <p className="confidence-joke"><Icon name="info" size={17}/>{t.confidenceJoke}</p>
+        </div>
+        <FrescoStage approach={approach} pressed={expired}/>
       </section>
       <Source data={data} locale={locale} t={t}/>
       <WorldTimes target={target} locale={locale} t={t}/>
@@ -142,7 +170,7 @@ function App() {
         <div className="footer-meta">
           <p className="local-note">{t.localNote}</p>
         </div>
-        {howOpen && <div className="how-detail"><strong>{t.updateTitle}</strong><p>{t.updateBody}</p></div>}
+        {howOpen && <div className="how-detail"><strong>{t.updateTitle}</strong><p>{t.updateBody}</p><p className="disclaimer">{t.disclaimer}</p></div>}
       </section>
     </main>
   </div>

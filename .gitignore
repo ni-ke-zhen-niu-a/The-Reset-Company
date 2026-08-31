@@ -1,0 +1,8 @@
+node_modules
+dist
+.DS_Store
+playwright-report
+test-results
+generated_images
+.pw-browsers
+qa-*.png

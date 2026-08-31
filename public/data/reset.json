@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "state": "scheduled",
-  "resetAt": "2026-08-31T02:00:00.000Z",
+  "state": "none",
+  "resetAt": null,
   "announcedAt": "2026-08-30T19:24:37.364Z",
   "sourceUrl": "https://x.com/thsottiaux/status/2094144275957350900",
   "sourceText": "Your Codex and ChatGPT Work reset will land at 6pm PST.",
@@ -9,7 +9,7 @@
   "sourceAuthor": "thsottiaux",
   "parseMethod": "absolute-time-with-zone",
   "confidence": "high",
-  "lastCheckedAt": "2026-08-31T02:12:51.135Z",
-  "lastCheckMethod": "manual",
-  "lastCheckStatus": "success"
+  "lastCheckedAt": "2026-08-31T16:43:28.054Z",
+  "lastCheckMethod": "unavailable",
+  "lastCheckStatus": "degraded"
 }

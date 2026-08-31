@@ -23,9 +23,9 @@ html { background: var(--bg); }
 body { margin: 0; min-width: 320px; min-height: 100vh; }
 button, select { font: inherit; }
 button, a, select { -webkit-tap-highlight-color: transparent; }
-.page-shell { width: min(1536px, calc(100% - 32px)); min-height: calc(100vh - 32px); margin: 16px auto; background: var(--page); border: 1px solid var(--edge); overflow: hidden; }
+.page-shell { position: relative; width: min(1536px, calc(100% - 32px)); min-height: calc(100vh - 32px); margin: 16px auto; background: var(--page); border: 1px solid var(--edge); overflow: hidden; }
 
-header { position: relative; z-index: 10; height: 82px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--page) 94%, transparent); }
+header { position: absolute; z-index: 10; top: 0; left: 0; right: 0; height: 82px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; background: transparent; }
 .brand { display: flex; align-items: center; gap: 14px; color: inherit; text-decoration: none; font-size: 22px; font-weight: 700; letter-spacing: -.04em; }
 .mark { position: relative; width: 39px; height: 39px; display: grid; place-items: center; border: 2px solid var(--text); border-radius: 50%; }
 .mark .icon { width: 24px; stroke-width: 1.7; }
@@ -37,14 +37,14 @@ header { position: relative; z-index: 10; height: 82px; display: flex; align-ite
 .menu-button { display: none; border: 0; background: none; color: inherit; padding: 8px; }
 
 main { padding: 0; }
-.hero { position: relative; min-height: 700px; overflow: hidden; background: #fbfaf6; isolation: isolate; }
+.hero { position: relative; min-height: 782px; overflow: hidden; background: #fbfaf6 url('./assets/fresco-hero-background.webp') center bottom / cover no-repeat; isolation: isolate; }
 .hero-copy { position: relative; z-index: 4; display: flex; flex-direction: column; align-items: center; width: 100%; padding: 27px 28px 0; text-align: center; }
-.fresco-stage { --travel: 98px; position: absolute; z-index: 1; left: 0; right: 0; bottom: 0; height: 71%; overflow: hidden; background: url('./assets/fresco-hero-background.webp') center bottom / cover no-repeat; }
-.fresco-stage::after { content: ''; position: absolute; z-index: 3; inset: 0; pointer-events: none; box-shadow: inset 0 24px 32px rgba(255, 254, 249, .42); }
+.fresco-stage { --travel: 145px; position: absolute; z-index: 1; left: 0; right: 0; bottom: 0; height: 71%; overflow: hidden; }
+.fresco-stage::after { content: ''; position: absolute; z-index: 3; inset: 0; pointer-events: none; }
 .tibo-figure { position: absolute; z-index: 2; left: -1.5%; bottom: -17%; width: 71%; max-width: 1060px; height: auto; user-select: none; transform: translate3d(min(var(--travel-x), var(--travel)), min(var(--travel-y), 3px), 0); transform-origin: 35% 72%; transition: transform 1s linear; filter: saturate(.91) contrast(.98); pointer-events: none; }
 .reset-assembly { position: absolute; z-index: 4; right: 5.8%; bottom: 13%; width: clamp(164px, 17.2vw, 248px); aspect-ratio: 1; display: grid; place-items: center; padding: 0; border: 0; background: transparent; color: var(--text); cursor: pointer; }
 .reset-button { display: block; width: 100%; height: 100%; object-fit: contain; user-select: none; transform: translateY(0) scale(1); transform-origin: center 70%; filter: drop-shadow(0 11px 7px rgba(42, 30, 17, .18)); }
-.contact-spark { position: absolute; left: -16px; top: 50%; width: 9px; height: 9px; border-radius: 50%; opacity: 0; background: #fff4d4; box-shadow: 0 0 0 4px rgba(239, 67, 24, .3), 0 0 25px 10px rgba(255, 119, 47, .5); }
+.contact-spark { position: absolute; left: 8px; top: 50%; width: 9px; height: 9px; border-radius: 50%; opacity: 0; background: #fff4d4; box-shadow: 0 0 0 4px rgba(239, 67, 24, .3), 0 0 25px 10px rgba(255, 119, 47, .5); }
 .reset-feedback { position: absolute; left: 50%; bottom: 1%; min-width: 130px; transform: translateX(-50%); color: #594936; font-family: "DM Mono", ui-monospace, monospace; font-size: 10px; letter-spacing: .04em; opacity: 0; transition: opacity .18s ease; }
 .reset-assembly:hover .reset-button { transform: translateY(3px) scale(.99); }
 .reset-assembly:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 38%, transparent); outline-offset: -10px; border-radius: 50%; }
@@ -129,7 +129,7 @@ blockquote cite { display: block; margin-top: 10px; font-style: normal; }
 }
 
 @media (max-width: 1100px) {
-  .fresco-stage { --travel: 70px; }
+  .fresco-stage { --travel: 90px; }
   .tibo-figure { width: 75%; bottom: -12%; }
   .reset-assembly { right: 3%; }
   .count-unit { min-width: 145px; }
@@ -148,13 +148,12 @@ blockquote cite { display: block; margin-top: 10px; font-style: normal; }
   .select-control:last-child { border-bottom: 0; }
   .select-control select { flex: 1; max-width: none; }
   .control-rule { display: none; }
-  .hero { min-height: 630px; }
-  .hero-copy { padding: 28px 18px 0; }
+  .hero { min-height: 690px; }
+  .hero-copy { padding: 88px 18px 0; }
   .fresco-stage { --travel: 18px; height: 50%; background-position: 38% bottom; }
-  .fresco-stage::after { box-shadow: inset 0 20px 28px rgba(255, 254, 249, .48); }
   .tibo-figure { left: -33%; bottom: -5%; width: 100%; max-width: none; }
   .reset-assembly { right: -3%; bottom: 19%; width: 128px; }
-  .contact-spark { left: -8px; }
+  .contact-spark { left: 8px; }
   .countdown { gap: 7px; }
   .count-unit-wrap { gap: 7px; }
   .count-unit { min-width: 84px; }
@@ -200,14 +199,14 @@ blockquote cite { display: block; margin-top: 10px; font-style: normal; }
     --edge: #4a4841;
     --shadow: rgba(0,0,0,.36);
   }
-  .hero { background: #171714; }
+  .hero { background-color: #171714; }
+  .hero::before { content: ''; position: absolute; z-index: 0; inset: 0; pointer-events: none; background: rgba(15, 15, 13, .58); }
   .fresco-stage { filter: brightness(.57) saturate(.72) contrast(1.08); }
-  .fresco-stage::after { box-shadow: inset 0 27px 42px rgba(21, 22, 22, .62); }
   .hero-copy { text-shadow: 0 1px 14px rgba(21,22,22,.12); }
 }
 
 @media (max-width: 370px) {
-  .hero { min-height: 600px; }
+  .hero { min-height: 660px; }
   .state-message h1 { font-size: 39px; }
   .event-primary h1 { font-size: 26px; }
   .confidence-joke { max-width: 280px; line-height: 1.45; }

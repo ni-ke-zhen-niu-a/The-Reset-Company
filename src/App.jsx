@@ -100,6 +100,7 @@ function Source({ data, locale, t }) {
         {data.sourceUrl && <a href={data.sourceUrl} target="_blank" rel="noreferrer"><Icon name="link"/>{t.viewSource}<Icon name="external" size={15}/></a>}
         <p><Icon name="calendar"/>{t.detected}: {detected ? new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' }).format(detected) : '—'}</p>
         <p><Icon name="refresh"/>{t.lastChecked}: <span className="relative-check">{relativeTime(checked, locale, t)}</span></p>
+        <p className="confidence-joke"><Icon name="info"/>{t.confidenceJoke}</p>
       </div>
     </div>
   </section>
@@ -140,7 +141,6 @@ function App() {
         <button onClick={() => setHowOpen(!howOpen)} aria-expanded={howOpen}><Icon name="info"/><span>{t.how}</span><Icon name="chevron" size={15}/></button>
         <div className="footer-meta">
           <p className="local-note">{t.localNote}</p>
-          <p className="confidence-joke">{t.confidenceJoke}</p>
         </div>
         {howOpen && <div className="how-detail"><strong>{t.updateTitle}</strong><p>{t.updateBody}</p></div>}
       </section>

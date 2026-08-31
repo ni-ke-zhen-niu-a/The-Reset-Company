@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { detectLanguage, getCopy, languages } from './i18n.js'
-import { allZones, countdownParts, eventLabel, featuredZones, getLocalZone, relativeTime, zoneOffset, zoneShort } from './time.js'
+import { allZones, countdownParts, eventLabel, featuredZones, getLocalZone, relativeTime, resetProgress, zoneOffset, zoneShort } from './time.js'
 
 const DATA_URL = './data/reset.json'
 
@@ -64,17 +64,30 @@ function Countdown({ target, now, t }) {
   </div>
 }
 
-function FrescoStage({ approach, pressed }) {
+function FrescoStage({ approach, pressed, t }) {
+  const [feedback, setFeedback] = useState('')
+
+  const handleButton = () => {
+    setFeedback('')
+    window.requestAnimationFrame(() => setFeedback(pressed ? 'pressed' : 'not-yet'))
+  }
+
+  useEffect(() => {
+    if (!feedback) return undefined
+    const timer = window.setTimeout(() => setFeedback(''), 1300)
+    return () => window.clearTimeout(timer)
+  }, [feedback])
+
   return <div
-    className={`fresco-stage ${pressed ? 'is-pressed' : ''}`}
-    style={{ '--approach': approach }}
-    aria-hidden="true"
+    className={`fresco-stage ${pressed ? 'is-pressed' : ''} ${feedback ? `feedback-${feedback}` : ''}`}
+    style={{ '--travel-x': `${approach * 98}px`, '--travel-y': `${approach * 3}px` }}
   >
-    <img className="tibo-figure" src="./assets/tibo-fresco-reclining.webp" alt=""/>
-    <div className="reset-assembly">
+    <img className="tibo-figure" src="./assets/tibo-fresco-reclining.webp" alt={t.tiboAlt}/>
+    <button className="reset-assembly" type="button" onClick={handleButton} aria-label={pressed ? t.resetPressed : t.resetNotYet}>
       <img className="reset-button" src="./assets/fresco-reset-button.webp" alt=""/>
       <span className="contact-spark"/>
-    </div>
+      <span className="reset-feedback" aria-live="polite">{feedback === 'not-yet' ? t.resetNotYet : pressed ? t.resetPressed : ''}</span>
+    </button>
   </div>
 }
 
@@ -133,13 +146,7 @@ function App() {
   const target = useMemo(() => data.resetAt ? new Date(data.resetAt) : null, [data.resetAt])
   const announcedAt = useMemo(() => data.announcedAt ? new Date(data.announcedAt) : null, [data.announcedAt])
   const expired = Boolean(target && (data.state === 'completed' || target.getTime() <= now.getTime()))
-  const approach = useMemo(() => {
-    if (!target) return 0
-    const end = target.getTime()
-    const start = announcedAt?.getTime() ?? end - 6 * 60 * 60 * 1000
-    if (end <= start) return expired ? 1 : 0
-    return Math.min(1, Math.max(0, (now.getTime() - start) / (end - start)))
-  }, [announcedAt, expired, now, target])
+  const approach = useMemo(() => resetProgress(target, announcedAt, now), [announcedAt, now, target])
 
   return <div className="page-shell">
     <Header locale={locale} setLocale={setLocale} timeZone={timeZone} setTimeZone={setTimeZone} t={t}/>
@@ -154,14 +161,14 @@ function App() {
                 ? <div className="state-message live"><span className="live-mark"><Icon name="refresh" size={30}/></span><h1>{t.live}</h1><p>{t.liveBody}</p></div>
                 : <Countdown target={target} now={now} t={t}/>
           }
+          {target && <p className="confidence-joke"><Icon name="info" size={17}/>{t.confidenceJoke}</p>}
           {target && <div className="event-time">
             <div className="event-primary"><Icon name="clock" size={29}/><h1>{eventLabel(target, locale, timeZone)}</h1></div>
             <p>{timeZone} ({zoneOffset(target, timeZone)})</p>
             <div className="status-line"><span/>{expired ? t.live : t.scheduled} · {t.detectedFrom}</div>
           </div>}
-          <p className="confidence-joke"><Icon name="info" size={17}/>{t.confidenceJoke}</p>
         </div>
-        <FrescoStage approach={approach} pressed={expired}/>
+        <FrescoStage approach={approach} pressed={expired} t={t}/>
       </section>
       <Source data={data} locale={locale} t={t}/>
       <WorldTimes target={target} locale={locale} t={t}/>

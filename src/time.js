@@ -61,6 +61,16 @@ export function countdownParts(target, now = new Date()) {
   }
 }
 
+export function resetProgress(target, announcedAt, now = new Date()) {
+  if (!target) return 0
+  const end = target.getTime()
+  const start = announcedAt?.getTime?.() ?? end - 6 * 60 * 60 * 1000
+  if (!Number.isFinite(end) || !Number.isFinite(start) || end <= start) {
+    return now.getTime() >= end ? 1 : 0
+  }
+  return Math.min(1, Math.max(0, (now.getTime() - start) / (end - start)))
+}
+
 export function relativeTime(date, locale, t) {
   if (!date) return '—'
   const delta = Date.now() - date.getTime()

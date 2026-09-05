@@ -31,6 +31,18 @@ test('does not invent a time for a vague announcement', () => {
   assert.equal(result.state, 'announced')
 })
 
+test('treats an 8pm eligibility cutoff as time TBD, not the reset time', () => {
+  const result = parseResetPost({
+    id: '2096035437299237298',
+    text: 'We will do the full banked reset today too for all Plus, Pro and Business users. Lands end of day. PS: If you create the account or upgrade before 8pm PT you will get it too.',
+    created_at: '2026-09-05T00:39:25.364Z',
+    url: 'https://x.com/thsottiaux/status/2096035437299237298',
+  })
+  assert.equal(result.resetAt, null)
+  assert.equal(result.state, 'announced')
+  assert.equal(result.parseMethod, 'no-precise-time')
+})
+
 test('ignores unrelated posts', () => {
   assert.equal(parseResetPost({ id: '3', text: 'Codex shipped a new feature.', created_at: '2026-08-22T16:00:00Z' }), null)
 })

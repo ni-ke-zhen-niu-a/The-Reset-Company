@@ -94,7 +94,7 @@ export function parseResetPost(post) {
   const announcedAt = new Date(post.created_at || post.announcedAt)
   if (!text || Number.isNaN(announcedAt.getTime())) return null
   const mentionsReset = /\breset(?:s|ting|ted)?\b/i.test(text)
-  const relevantProduct = /\bCodex\b|ChatGPT Work|usage limits?|rate limits?/i.test(text)
+  const relevantProduct = /\bCodex\b|ChatGPT Work|usage limits?|rate limits?|banked reset/i.test(text)
   if (!mentionsReset || !relevantProduct) return null
 
   const parsed = parseIso(text) || parseAbsoluteClock(text, announcedAt) || parseRelative(text, announcedAt)

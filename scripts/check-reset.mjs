@@ -27,7 +27,10 @@ function decodeXml(value = '') {
 async function discoverStatusIds() {
   const urls = []
   if (process.env.PUBLIC_TIMELINE_RSS_URL) urls.push(process.env.PUBLIC_TIMELINE_RSS_URL)
-  urls.push(`https://www.bing.com/search?format=rss&q=${encodeURIComponent(`site:x.com/${author}/status (Codex OR \"usage limits\") reset`)}`)
+  // Public index used only to discover candidate X post IDs; post text is
+  // fetched separately from X-compatible embed APIs before parsing.
+  urls.push('https://codex-resets.com/')
+  urls.push(`https://www.bing.com/search?format=rss&q=${encodeURIComponent(`site:x.com/${author}/status reset`)}`)
   const ids = new Set()
   for (const url of urls) {
     try {
@@ -39,7 +42,7 @@ async function discoverStatusIds() {
       console.warn(`Public discovery failed: ${error.message}`)
     }
   }
-  return [...ids]
+  return [...ids].sort((a, b) => (BigInt(a) > BigInt(b) ? -1 : BigInt(a) < BigInt(b) ? 1 : 0))
 }
 
 async function fetchPublicPost(id) {

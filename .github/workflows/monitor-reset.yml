@@ -2,7 +2,8 @@ name: Monitor Tibo reset posts
 
 on:
   schedule:
-    - cron: '*/10 * * * *'
+    # Once daily, after the usual Pacific-time announcement window.
+    - cron: '17 4 * * *'
   workflow_dispatch:
     inputs:
       post_text:

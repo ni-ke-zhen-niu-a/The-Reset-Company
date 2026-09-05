@@ -8,7 +8,7 @@ A small public utility that turns reset plans announced by [Tibo](https://x.com/
 - Supports English, Simplified Chinese, Japanese, Spanish, German, French, and Portuguese.
 - Shows the source post, detection time, last check, and five reference cities.
 - Distinguishes exact times, relative times, and vague announcements. Vague posts show “time TBD” instead of a fabricated countdown.
-- Runs a GitHub Actions monitor every 10 minutes and redeploys only when the reset schedule changes.
+- Runs a GitHub Actions monitor once daily and redeploys only when the reset schedule changes.
 
 ## Run locally
 
@@ -35,7 +35,7 @@ The Vite base path is relative, so the same build works at `username.github.io/r
 
 ## Automatic monitoring
 
-For reliable discovery, create the repository secret `X_BEARER_TOKEN` with an X API v2 bearer token. The monitor reads Tibo's recent original posts. Without that secret it attempts public search discovery and fetches discovered post IDs through public embed APIs; that fallback can be delayed or blocked by third parties.
+For reliable discovery, create the repository secret `X_BEARER_TOKEN` with an X API v2 bearer token. The monitor reads Tibo's recent original posts. Without that secret it attempts public index and search discovery, then verifies discovered post IDs through public X-compatible embed APIs; those fallbacks can be delayed or blocked by third parties.
 
 An optional `PUBLIC_TIMELINE_RSS_URL` secret may point to a trusted RSS feed for the account.
 

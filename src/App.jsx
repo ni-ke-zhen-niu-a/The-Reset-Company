@@ -146,6 +146,7 @@ function App() {
   const target = useMemo(() => data.resetAt ? new Date(data.resetAt) : null, [data.resetAt])
   const announcedAt = useMemo(() => data.announcedAt ? new Date(data.announcedAt) : null, [data.announcedAt])
   const expired = Boolean(target && (data.state === 'completed' || target.getTime() <= now.getTime()))
+  const estimated = data.state === 'estimated' || data.parseMethod === 'eligibility-cutoff-proxy'
   const approach = useMemo(() => resetProgress(target, announcedAt, now), [announcedAt, now, target])
 
   return <div className="page-shell">
@@ -158,14 +159,14 @@ function App() {
             : !target
               ? <div className="state-message"><h1>{t.awaiting}</h1><p>{t.awaitingBody}</p></div>
               : expired
-                ? <div className="state-message live"><span className="live-mark"><Icon name="refresh" size={30}/></span><h1>{t.live}</h1><p>{t.liveBody}</p></div>
+                ? <div className="state-message live"><span className="live-mark"><Icon name="refresh" size={30}/></span><h1>{estimated ? t.estimatedLive : t.live}</h1><p>{estimated ? t.estimatedLiveBody : t.liveBody}</p></div>
                 : <Countdown target={target} now={now} t={t}/>
           }
           {target && <p className="confidence-joke"><Icon name="info" size={17}/>{t.confidenceJoke}</p>}
           {target && <div className="event-time">
             <div className="event-primary"><Icon name="clock" size={29}/><h1>{eventLabel(target, locale, timeZone)}</h1></div>
             <p>{timeZone} ({zoneOffset(target, timeZone)})</p>
-            <div className="status-line"><span/>{expired ? t.live : t.scheduled} · {t.detectedFrom}</div>
+            <div className="status-line"><span/>{estimated ? t.estimated : expired ? t.live : t.scheduled} · {t.detectedFrom}</div>
           </div>}
         </div>
         <FrescoStage approach={approach} pressed={expired} t={t}/>

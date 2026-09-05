@@ -117,10 +117,10 @@ async function main() {
   if (isNewAnnouncement) {
     next = { schemaVersion: 1, ...found, lastCheckedAt: checkedAt.toISOString(), lastCheckMethod: method, lastCheckStatus: 'success' }
     changed = true
-    if (found.resetAt && !history.some((item) => item.sourceId === found.sourceId)) {
+    if (found.state === 'scheduled' && found.resetAt && !history.some((item) => item.sourceId === found.sourceId)) {
       history.unshift({ resetAt: found.resetAt, announcedAt: found.announcedAt, sourceUrl: found.sourceUrl, sourceId: found.sourceId })
     }
-  } else if (current.state !== 'none' && current.resetAt && checkedAt - new Date(current.resetAt) > 12 * 3600000) {
+  } else if (current.state !== 'none' && current.state !== 'estimated' && current.resetAt && checkedAt - new Date(current.resetAt) > 12 * 3600000) {
     next = { ...current, state: 'none', resetAt: null, lastCheckedAt: checkedAt.toISOString(), lastCheckMethod: method, lastCheckStatus: method === 'unavailable' ? 'degraded' : 'success' }
     changed = true
   }

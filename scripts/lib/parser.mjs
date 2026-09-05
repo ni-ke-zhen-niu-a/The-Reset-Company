@@ -89,6 +89,31 @@ function parseRelative(text, announcedAt) {
   return { resetAt: new Date(announcedAt.getTime() + count * multiplier), method: 'relative-duration', confidence: 'medium' }
 }
 
+function parseEligibilityCutoffProxy(text, announcedAt) {
+  const match = text.match(/(?:create\s+(?:the\s+)?account|upgrade)[\s\S]{0,80}?before\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\s*(PT|PST|PDT)\b/i)
+  if (!match || !/\blands?\s+end\s+of\s+day\b/i.test(text)) return null
+
+  const [, hourRaw, minuteRaw, meridiem, zoneRaw] = match
+  const zoneKey = zoneRaw.toUpperCase()
+  const zone = zoneAliases[zoneKey]
+  const clock = parseClock(hourRaw, minuteRaw, meridiem)
+  let localParts
+  let result
+
+  if (zone.type === 'iana') {
+    localParts = datePartsInZone(announcedAt, zone.name)
+    result = localToUtc({ ...localParts, ...clock }, zone.name)
+  } else {
+    const shifted = new Date(announcedAt.getTime() + zone.minutes * 60000)
+    result = new Date(Date.UTC(
+      shifted.getUTCFullYear(), shifted.getUTCMonth(), shifted.getUTCDate(),
+      clock.hour, clock.minute,
+    ) - zone.minutes * 60000)
+  }
+
+  return { resetAt: result, method: 'eligibility-cutoff-proxy', confidence: 'low', state: 'estimated' }
+}
+
 export function parseResetPost(post) {
   const text = clean(post.text || '')
   const announcedAt = new Date(post.created_at || post.announcedAt)
@@ -97,9 +122,9 @@ export function parseResetPost(post) {
   const relevantProduct = /\bCodex\b|ChatGPT Work|usage limits?|rate limits?|banked reset/i.test(text)
   if (!mentionsReset || !relevantProduct) return null
 
-  const parsed = parseIso(text) || parseAbsoluteClock(text, announcedAt) || parseRelative(text, announcedAt)
+  const parsed = parseIso(text) || parseAbsoluteClock(text, announcedAt) || parseRelative(text, announcedAt) || parseEligibilityCutoffProxy(text, announcedAt)
   return {
-    state: parsed ? 'scheduled' : 'announced',
+    state: parsed?.state || (parsed ? 'scheduled' : 'announced'),
     resetAt: parsed?.resetAt?.toISOString() || null,
     announcedAt: announcedAt.toISOString(),
     sourceUrl: post.url,

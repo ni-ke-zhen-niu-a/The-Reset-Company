@@ -78,7 +78,7 @@ function FrescoStage({ approach, pressed, t }) {
     const baseGap = button.offsetLeft - (figure.offsetLeft + figure.offsetWidth)
     const next = {
       ready: Math.max(0, baseGap - 24),
-      pressed: Math.max(0, baseGap + 18),
+      pressed: Math.max(0, baseGap + 34),
     }
     setTravel((current) => (
       Math.abs(current.ready - next.ready) < 0.5 && Math.abs(current.pressed - next.pressed) < 0.5

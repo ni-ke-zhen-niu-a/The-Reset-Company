@@ -62,7 +62,7 @@ jobs:
       - name: Send WeChat notification on new reset opportunity
         run: node scripts/notify-reset.mjs "$RUNNER_TEMP/reset-before.json" "public/data/reset.json"
         env:
-          NOTIFY_TIME_ZONE: Asia/Tokyo
+          NOTIFY_TIME_ZONE: Asia/Shanghai
           FORCE_TEST_NOTIFICATION: ${{ inputs.force_test_notification }}
           PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
 

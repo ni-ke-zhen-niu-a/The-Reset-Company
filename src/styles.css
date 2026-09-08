@@ -39,16 +39,16 @@ header { position: absolute; z-index: 10; top: 0; left: 0; right: 0; height: 82p
 main { padding: 0; }
 .hero { position: relative; min-height: 782px; overflow: hidden; background: #fbfaf6 url('./assets/fresco-hero-background.webp') center bottom / cover no-repeat; isolation: isolate; }
 .hero-copy { position: relative; z-index: 4; display: flex; flex-direction: column; align-items: center; width: 100%; padding: 68px 28px 0; text-align: center; }
-.fresco-stage { --travel: 190px; position: absolute; z-index: 1; left: 0; right: 0; bottom: 0; height: 71%; overflow: hidden; }
+.fresco-stage { position: absolute; z-index: 1; left: 0; right: 0; bottom: 0; height: 71%; overflow: hidden; }
 .fresco-stage::after { content: ''; position: absolute; z-index: 3; inset: 0; pointer-events: none; }
-.tibo-figure { position: absolute; z-index: 5; left: -1.5%; bottom: -17%; width: 71%; max-width: 1060px; height: auto; user-select: none; transform: translate3d(min(var(--travel-x), var(--travel)), min(var(--travel-y), 3px), 0); transform-origin: 35% 72%; transition: transform 1s linear; filter: saturate(.91) contrast(.98); pointer-events: none; }
+.tibo-figure { position: absolute; z-index: 5; left: -1.5%; bottom: -17%; width: 71%; max-width: 1060px; height: auto; user-select: none; transform: translate3d(var(--travel-x), min(var(--travel-y), 3px), 0); transform-origin: 35% 72%; transition: transform 1s linear; filter: saturate(.91) contrast(.98); pointer-events: none; }
 .reset-assembly { position: absolute; z-index: 4; right: 5.8%; bottom: 13%; width: clamp(164px, 17.2vw, 248px); aspect-ratio: 1; display: grid; place-items: center; padding: 0; border: 0; background: transparent; color: var(--text); cursor: pointer; }
 .reset-button { display: block; width: 100%; height: 100%; object-fit: contain; user-select: none; transform: translateY(0) scale(1); transform-origin: center 70%; filter: drop-shadow(0 11px 7px rgba(42, 30, 17, .18)); }
 .contact-spark { position: absolute; left: 11%; top: 50%; width: 9px; height: 9px; border-radius: 50%; opacity: 0; background: #fff4d4; box-shadow: 0 0 0 4px rgba(239, 67, 24, .3), 0 0 25px 10px rgba(255, 119, 47, .5); }
 .reset-feedback { position: absolute; left: 50%; bottom: 1%; min-width: 130px; transform: translateX(-50%); color: #594936; font-family: "DM Mono", ui-monospace, monospace; font-size: 10px; letter-spacing: .04em; opacity: 0; transition: opacity .18s ease; }
 .reset-assembly:hover .reset-button { transform: translateY(3px) scale(.99); }
 .reset-assembly:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 38%, transparent); outline-offset: -10px; border-radius: 50%; }
-.is-pressed .tibo-figure { transform: translate3d(var(--travel), 7px, 0) rotate(.15deg); }
+.is-pressed .tibo-figure { transform: translate3d(var(--press-travel), 7px, 0) rotate(.15deg); }
 .is-pressed .reset-button { animation: reset-press 1.15s cubic-bezier(.2,.75,.25,1) both; }
 .is-pressed .contact-spark { animation: contact-flash .75s ease-out .18s both; }
 .is-pressed .reset-feedback, .feedback-not-yet .reset-feedback { opacity: 1; }
@@ -129,7 +129,6 @@ blockquote cite { display: block; margin-top: 10px; font-style: normal; }
 }
 
 @media (max-width: 1100px) {
-  .fresco-stage { --travel: 112px; }
   .tibo-figure { width: 75%; bottom: -12%; }
   .reset-assembly { right: 3%; }
   .count-unit { min-width: 145px; }
@@ -150,7 +149,7 @@ blockquote cite { display: block; margin-top: 10px; font-style: normal; }
   .control-rule { display: none; }
   .hero { min-height: 690px; }
   .hero-copy { padding: 104px 18px 0; }
-  .fresco-stage { --travel: 28px; height: 50%; background-position: 38% bottom; }
+  .fresco-stage { height: 50%; background-position: 38% bottom; }
   .tibo-figure { left: -33%; bottom: -5%; width: 100%; max-width: none; }
   .reset-assembly { right: -3%; bottom: 19%; width: 128px; }
   .contact-spark { left: 11%; }

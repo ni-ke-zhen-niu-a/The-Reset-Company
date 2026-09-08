@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { detectLanguage, getCopy, languages } from './i18n.js'
 import { allZones, countdownParts, eventLabel, featuredZones, getLocalZone, relativeTime, resetProgress, zoneOffset, zoneShort } from './time.js'
 
@@ -66,6 +66,33 @@ function Countdown({ target, now, t }) {
 
 function FrescoStage({ approach, pressed, t }) {
   const [feedback, setFeedback] = useState('')
+  const [travel, setTravel] = useState({ ready: 0, pressed: 0 })
+  const stageRef = useRef(null)
+  const figureRef = useRef(null)
+  const buttonRef = useRef(null)
+
+  const measureContact = useCallback(() => {
+    const figure = figureRef.current
+    const button = buttonRef.current
+    if (!figure || !button) return
+    const baseGap = button.offsetLeft - (figure.offsetLeft + figure.offsetWidth)
+    const next = {
+      ready: Math.max(0, baseGap - 24),
+      pressed: Math.max(0, baseGap + 18),
+    }
+    setTravel((current) => (
+      Math.abs(current.ready - next.ready) < 0.5 && Math.abs(current.pressed - next.pressed) < 0.5
+        ? current
+        : next
+    ))
+  }, [])
+
+  useLayoutEffect(() => {
+    measureContact()
+    const observer = new ResizeObserver(measureContact)
+    if (stageRef.current) observer.observe(stageRef.current)
+    return () => observer.disconnect()
+  }, [measureContact])
 
   const handleButton = () => {
     setFeedback('')
@@ -79,11 +106,12 @@ function FrescoStage({ approach, pressed, t }) {
   }, [feedback])
 
   return <div
+    ref={stageRef}
     className={`fresco-stage ${pressed ? 'is-pressed' : ''} ${feedback ? `feedback-${feedback}` : ''}`}
-    style={{ '--travel-x': `${approach * 190}px`, '--travel-y': `${approach * 3}px` }}
+    style={{ '--travel-x': `${approach * travel.ready}px`, '--press-travel': `${travel.pressed}px`, '--travel-y': `${approach * 3}px` }}
   >
-    <img className="tibo-figure" src="./assets/tibo-fresco-reclining.webp" alt={t.tiboAlt}/>
-    <button className="reset-assembly" type="button" onClick={handleButton} aria-label={pressed ? t.resetPressed : t.resetNotYet}>
+    <img ref={figureRef} className="tibo-figure" src="./assets/tibo-fresco-reclining.webp" alt={t.tiboAlt} onLoad={measureContact}/>
+    <button ref={buttonRef} className="reset-assembly" type="button" onClick={handleButton} aria-label={pressed ? t.resetPressed : t.resetNotYet}>
       <img className="reset-button" src="./assets/fresco-reset-button.webp" alt=""/>
       <span className="contact-spark"/>
       <span className="reset-feedback" aria-live="polite">{feedback === 'not-yet' ? t.resetNotYet : pressed ? t.resetPressed : ''}</span>
@@ -145,7 +173,8 @@ function App() {
   const setTimeZone = (value) => { setTimeZoneState(value); localStorage.setItem('codex-reset-timezone', value) }
   const target = useMemo(() => data.resetAt ? new Date(data.resetAt) : null, [data.resetAt])
   const announcedAt = useMemo(() => data.announcedAt ? new Date(data.announcedAt) : null, [data.announcedAt])
-  const expired = Boolean(target && (data.state === 'completed' || target.getTime() <= now.getTime()))
+  const rolloutObserved = data.state === 'rolling-out'
+  const expired = Boolean(target && (data.state === 'completed' || rolloutObserved || target.getTime() <= now.getTime()))
   const estimated = data.state === 'estimated' || data.parseMethod === 'eligibility-cutoff-proxy'
   const approach = useMemo(() => resetProgress(target, announcedAt, now), [announcedAt, now, target])
 
@@ -159,14 +188,14 @@ function App() {
             : !target
               ? <div className="state-message"><h1>{t.awaiting}</h1><p>{t.awaitingBody}</p></div>
               : expired
-                ? <div className="state-message live"><span className="live-mark"><Icon name="refresh" size={30}/></span><h1>{estimated ? t.estimatedLive : t.live}</h1><p>{estimated ? t.estimatedLiveBody : t.liveBody}</p></div>
+                ? <div className="state-message live"><span className="live-mark"><Icon name="refresh" size={30}/></span><h1>{rolloutObserved ? t.rolloutLive : estimated ? t.estimatedLive : t.live}</h1><p>{rolloutObserved ? t.rolloutLiveBody : estimated ? t.estimatedLiveBody : t.liveBody}</p></div>
                 : <Countdown target={target} now={now} t={t}/>
           }
           {target && <p className="confidence-joke"><Icon name="info" size={17}/>{t.confidenceJoke}</p>}
           {target && <div className="event-time">
             <div className="event-primary"><Icon name="clock" size={29}/><h1>{eventLabel(target, locale, timeZone)}</h1></div>
             <p>{timeZone} ({zoneOffset(target, timeZone)})</p>
-            <div className="status-line"><span/>{estimated ? t.estimated : expired ? t.live : t.scheduled} · {t.detectedFrom}</div>
+            <div className="status-line"><span/>{rolloutObserved ? t.rolloutObserved : estimated ? t.estimated : expired ? t.live : t.scheduled} · {t.detectedFrom}</div>
           </div>}
         </div>
         <FrescoStage approach={approach} pressed={expired} t={t}/>

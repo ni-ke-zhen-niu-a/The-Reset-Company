@@ -108,11 +108,15 @@ async function main() {
   let next = current
   let changed = false
 
+  const keepObservedStatus = found && found.sourceId === current.sourceId &&
+    ['rolling-out', 'completed'].includes(current.state) &&
+    !['rolling-out', 'completed'].includes(found.state)
+
   const isNewAnnouncement = found && (
     found.sourceId !== current.sourceId ||
     found.resetAt !== current.resetAt ||
     found.state !== current.state
-  ) && (!current.announcedAt || new Date(found.announcedAt) >= new Date(current.announcedAt))
+  ) && !keepObservedStatus && (!current.announcedAt || new Date(found.announcedAt) >= new Date(current.announcedAt))
 
   if (isNewAnnouncement) {
     next = { schemaVersion: 1, ...found, lastCheckedAt: checkedAt.toISOString(), lastCheckMethod: method, lastCheckStatus: 'success' }

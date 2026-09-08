@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "state": "scheduled",
+  "state": "rolling-out",
   "resetAt": "2026-09-08T02:00:00.000Z",
   "announcedAt": "2026-09-07T19:24:57.786Z",
   "sourceUrl": "https://x.com/thsottiaux/status/2097043464538264003",
@@ -11,5 +11,7 @@
   "confidence": "medium",
   "lastCheckedAt": "2026-09-08T01:23:29.774Z",
   "lastCheckMethod": "public-discovery",
-  "lastCheckStatus": "success"
+  "lastCheckStatus": "success",
+  "observedAt": "2026-09-08T01:32:07.290Z",
+  "statusMethod": "user-report"
 }

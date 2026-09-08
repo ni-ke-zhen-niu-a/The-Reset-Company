@@ -22,6 +22,18 @@ test('parses relative hours', () => {
   assert.equal(result.confidence, 'medium')
 })
 
+test('parses a global paid-subscription reset announced without the Codex keyword', () => {
+  const result = parseResetPost({
+    id: '2097043464538264003',
+    text: 'We will do a global reset of the usage for all paid subscriptions. The work week is about to start. Lands around 6pm PST today.',
+    created_at: '2026-09-07T19:24:57.786Z',
+    url: 'https://x.com/thsottiaux/status/2097043464538264003',
+  })
+  assert.equal(result.resetAt, '2026-09-08T02:00:00.000Z')
+  assert.equal(result.state, 'scheduled')
+  assert.equal(result.confidence, 'medium')
+})
+
 test('does not invent a time for a vague announcement', () => {
   const result = parseResetPost({
     id: '2', text: 'We have reset usage limits across Codex. And another one will come later in the day.',

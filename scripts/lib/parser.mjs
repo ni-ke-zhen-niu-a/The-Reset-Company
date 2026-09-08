@@ -43,9 +43,9 @@ function addCalendarDays(parts, days) {
 }
 
 function parseAbsoluteClock(text, announcedAt) {
-  const match = text.match(/(?:\bat\s+|\bland(?:s|ing)?\s+(?:at\s+)?|\blikely\s+at\s+)(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\s*(UTC|GMT|PST|PDT|PT|EST|EDT|ET|JST|BST)\b/i)
+  const match = text.match(/(?:\bat\s+|\bland(?:s|ing)?\s+(?:(around|about|approximately)\s+)?(?:at\s+)?|\blikely\s+at\s+)(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\s*(UTC|GMT|PST|PDT|PT|EST|EDT|ET|JST|BST)\b/i)
   if (!match) return null
-  const [, hourRaw, minuteRaw, meridiem, zoneRaw] = match
+  const [, approximation, hourRaw, minuteRaw, meridiem, zoneRaw] = match
   const zoneKey = zoneRaw.toUpperCase()
   const zone = zoneAliases[zoneKey]
   if (!zone) return null
@@ -61,7 +61,7 @@ function parseAbsoluteClock(text, announcedAt) {
       localParts = addCalendarDays(localParts, 1)
       result = localToUtc({ ...localParts, ...clock }, zone.name)
     }
-    return { resetAt: result, method: 'absolute-time-with-zone', confidence: 'high' }
+    return { resetAt: result, method: 'absolute-time-with-zone', confidence: approximation ? 'medium' : 'high' }
   }
 
   const shifted = new Date(announcedAt.getTime() + zone.minutes * 60000)
@@ -72,7 +72,7 @@ function parseAbsoluteClock(text, announcedAt) {
   if (!tomorrow && result < announcedAt && announcedAt - result > 60 * 60 * 1000) {
     result = new Date(result.getTime() + 86400000)
   }
-  return { resetAt: result, method: 'absolute-time-with-zone', confidence: 'high' }
+  return { resetAt: result, method: 'absolute-time-with-zone', confidence: approximation ? 'medium' : 'high' }
 }
 
 function parseIso(text) {
@@ -119,7 +119,7 @@ export function parseResetPost(post) {
   const announcedAt = new Date(post.created_at || post.announcedAt)
   if (!text || Number.isNaN(announcedAt.getTime())) return null
   const mentionsReset = /\breset(?:s|ting|ted)?\b/i.test(text)
-  const relevantProduct = /\bCodex\b|ChatGPT Work|usage limits?|rate limits?|banked reset/i.test(text)
+  const relevantProduct = /\bCodex\b|ChatGPT Work|usage limits?|rate limits?|banked reset|(?:global\s+)?reset\s+of\s+(?:the\s+)?usage|paid subscriptions?/i.test(text)
   if (!mentionsReset || !relevantProduct) return null
 
   const parsed = parseIso(text) || parseAbsoluteClock(text, announcedAt) || parseRelative(text, announcedAt) || parseEligibilityCutoffProxy(text, announcedAt)

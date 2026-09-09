@@ -1,17 +1,15 @@
 {
   "schemaVersion": 1,
-  "state": "none",
+  "state": "announced",
   "resetAt": null,
-  "announcedAt": "2026-09-07T19:24:57.786Z",
-  "sourceUrl": "https://x.com/thsottiaux/status/2097043464538264003",
-  "sourceText": "Never gonna give you up Never gonna let you down Never gonna run around and desert you Never gonna make you cry Never gonna say goodbye Never gonna tell a lie and hurt you Thanks for reading. We will do a global reset of the usage for all paid subscriptions so that you can keep enjoying Astra after burning through all of it doing fun 3D modeling in blender. The work week is about to start. Lands around 6pm PST today.",
-  "sourceId": "2097043464538264003",
+  "announcedAt": "2026-09-09T18:23:34.000Z",
+  "sourceUrl": "https://x.com/thsottiaux/status/2097752790177370535",
+  "sourceText": "There was a bit of a kerfuffle this morning with some banked resets not fully applying when used in ChatGPT Work and Codex. Everyone who used one in the affected time window is getting another one and an email to apologize.",
+  "sourceId": "2097752790177370535",
   "sourceAuthor": "thsottiaux",
-  "parseMethod": "absolute-time-with-zone",
-  "confidence": "medium",
-  "lastCheckedAt": "2026-09-09T06:33:19.359Z",
+  "parseMethod": "no-precise-time",
+  "confidence": "low",
+  "lastCheckedAt": "2026-09-09T18:30:46.316Z",
   "lastCheckMethod": "public-discovery",
-  "lastCheckStatus": "success",
-  "observedAt": "2026-09-08T01:32:07.290Z",
-  "statusMethod": "user-report"
+  "lastCheckStatus": "success"
 }
